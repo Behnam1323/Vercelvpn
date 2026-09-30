@@ -1,47 +1,45 @@
 // index.js
 export default async function handler(req, res) {
-  // 1. بررسی WebSocket
+  // بررسی WebSocket
   if (req.headers.upgrade && req.headers.upgrade.toLowerCase() === 'websocket') {
-    // اگر درخواست WebSocket است، اتصال را برقرار کن
     const { socket: clientSocket, response } = req;
     
-    // ارسال هدرهای 101
+    // ارسال هدر 101
     response.writeHead(101, {
       'Upgrade': 'websocket',
       'Connection': 'Upgrade',
       'Sec-WebSocket-Accept': 'accept-string'
     });
 
-    // رویدادهای سوکت
     clientSocket.on('close', () => {
       console.log('WS Closed');
     });
 
-    return; // پایان پردازش
+    return;
   }
 
-  // 2. اگر درخواست عادی (HTTP) است، صفحه HTML را نمایش بده
+  // پاسخ HTML برای مرورگر
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.status(200).send(`
-    <html>
-      <head>
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="fa" dir="rtl">
+    <head>
+        <meta charset="UTF-8">
         <title>Vercel Proxy Status</title>
         <style>
-          body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
-          .box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-          h1 { color: #0070f3; }
-          code { background: #eee; padding: 2px 5px; border-radius: 3px; }
+            body { font-family: Tahoma, sans-serif; background: #1a1a1a; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+            .container { text-align: center; background: #333; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+            h1 { color: #00d2ff; }
+            p { color: #ccc; }
         </style>
-      </head>
-      <body>
-        <div class="box">
-          <h1>✅ Vercel V2Ray Proxy is Running</h1>
-          <p><strong>Status:</strong> Online</p>
-          <p><strong>Host:</strong> <code>${req.headers.host}</code></p>
-          <p><strong>Path for Config:</strong> <code>/</code></p>
-          <p>If you see this page, your Vercel deployment is correct.</p>
+    </head>
+    <body>
+        <div class="container">
+            <h1>✅ سرور با موفقیت فعال است</h1>
+            <p>اگر این صفحه را می‌بینید، دیپلوی درست انجام شده است.</p>
+            <p>Host: <b>${req.headers.host}</b></p>
         </div>
-      </body>
+    </body>
     </html>
   `);
 }
