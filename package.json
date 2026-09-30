@@ -1,0 +1,12 @@
+{
+  "name": "vercel-v2ray",
+  "version": "1.0.0",
+  "description": "Simple V2Ray/WARP Proxy on Vercel",
+  "main": "index.js",
+  "dependencies": {
+    "ws": "^8.16.0"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
